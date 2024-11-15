@@ -2,11 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "2.0.21" // 사용할 Kotlin 버전으로 변경하세요.
 }
 
 android {
     namespace = "com.qpeterp.clip"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.qpeterp.clip"
@@ -40,6 +44,18 @@ android {
 }
 
 dependencies {
+
+    // hilt & serialization
+    // Hilt Android 의존성
+    implementation(libs.hilt.android )
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+    ksp(libs.dagger.compiler) // Dagger compiler
+
+    // Jetpack Compose navigation
+    implementation (libs.androidx.navigation.compose)
+    // viewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
