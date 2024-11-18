@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpeterp.clip.presentation.theme.Colors
@@ -30,10 +31,19 @@ fun ClipDialog(
             title = {
                 Text(
                     text = title,
-                    color = titleColor
+                    color = titleColor,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
             },
-            text = { Text(text = message) },
+            text = {
+                Text(
+                    text = message,
+                    color = Colors.DarkGray,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            },
             confirmButton = {
                 Text(
                     text = "확인",
@@ -47,7 +57,7 @@ fun ClipDialog(
             dismissButton = {
                 Text(
                     text = "취소",
-                    color = Colors.Black,
+                    color = Colors.DarkGray,
                     fontSize = 14.sp,
                     modifier = Modifier
                         .clickable { onDismiss() }
