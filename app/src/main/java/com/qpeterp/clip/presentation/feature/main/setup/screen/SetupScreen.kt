@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.qpeterp.clip.presentation.feature.main.setup.screen
+
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
@@ -14,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,7 +49,6 @@ fun SetupScreen(
     viewModel: SetupViewModel = hiltViewModel(),
 ) {
     var meetingTopic by remember { mutableStateOf("") }
-    val scrollState = rememberScrollState()
     var isRecoding by remember { mutableStateOf(true) }
     var showDeleteSubTopicDialogState by remember { mutableStateOf(Pair(false, 0)) }
 
@@ -66,9 +64,7 @@ fun SetupScreen(
     val discardTextColor by animateColorAsState(
         targetValue = if (!isRecoding) Colors.White else Colors.Black, label = ""
     )
-
     val subTopicList by viewModel.meetingSubTopicList.collectAsState()
-
 
     Box(
         modifier = Modifier
@@ -80,117 +76,123 @@ fun SetupScreen(
             verticalArrangement = Arrangement.spacedBy(35.dp),
             modifier = Modifier
                 .fillMaxWidth()
-//                .verticalScroll(scrollState)
                 .align(Alignment.TopCenter)
+                .padding(bottom = 72.dp)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    text = "회의 주제",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Colors.Black
-                )
-                ClipTextField(
-                    label = "회의 주제 입력",
-                    currentText = meetingTopic,
-                ) {
-                    meetingTopic = it
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "회의 목차",
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Left,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Colors.Black,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(subTopicList) {
+                item {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "회의 주제",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Colors.Black
+                        )
                         ClipTextField(
-                            label = it.numbering.toString(),
-                            idValue = true,
+                            label = "회의 주제 입력",
                             currentText = meetingTopic,
-                            onDelete = { showDeleteSubTopicDialogState = Pair(true, it) },
-                            idValueChange = { numbering, content ->
-                                viewModel.updateSubTopicText(numbering, content)
-                            }
+                        ) {
+                            meetingTopic = it
+                        }
+                    }
+                }
+
+                item {
+                    Text(
+                        text = "회의 목차",
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Left,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Colors.Black,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                itemsIndexed(subTopicList) { index, subTopic ->
+                    ClipTextField(
+                        label = index.toString(),
+                        idValue = true,
+                        currentText = subTopic,
+                        onDelete = { showDeleteSubTopicDialogState = Pair(true, index) },
+                        idValueChange = { _, content ->
+                            viewModel.updateSubTopicText(index, content)
+                        }
+                    )
+                }
+
+                item {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Icon(
+                            imageVector = Icons.Default.AddCircle,
+                            contentDescription = "icon to add sub topic",
+                            tint = Colors.Black,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .align(Alignment.TopCenter)
+                                .clickable {
+                                    viewModel.addSubTopic()
+                                }
                         )
                     }
+
                 }
-                Icon(
-                    imageVector = Icons.Default.AddCircle,
-                    contentDescription = "icon to add sub topic",
-                    tint = Colors.Black,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable {
-                            viewModel.addSubTopic(
-                                SubTopic(subTopicList.size + 1, "")
-                            )
+
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "회의 시간",
+                            textAlign = TextAlign.Left,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        WheelTimePicker { snappedTime ->
+                            Log.d(Constant.TAG, "snappedTime is $snappedTime")
                         }
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "회의 시간",
-                    textAlign = TextAlign.Left,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                WheelTimePicker { snappedTime ->
-                    Log.d(Constant.TAG, "snappedTime is $snappedTime")
-                }
-            }
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "음성 파일 저장 여부",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    ClipButton(
-                        text = "저장 안함",
-                        textColor = discardTextColor,
-                        backgroundColor = discardButtonColor,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        isRecoding = false
                     }
-                    ClipButton(
-                        text = "저장",
-                        textColor = saveTextColor,
-                        backgroundColor = saveButtonColor,
-                        modifier = Modifier.weight(1f)
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        isRecoding = true
+                        Text(
+                            text = "음성 파일 저장 여부",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            ClipButton(
+                                text = "저장 안함",
+                                textColor = discardTextColor,
+                                backgroundColor = discardButtonColor,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                isRecoding = false
+                            }
+                            ClipButton(
+                                text = "저장",
+                                textColor = saveTextColor,
+                                backgroundColor = saveButtonColor,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                isRecoding = true
+                            }
+                        }
                     }
                 }
             }
@@ -202,7 +204,9 @@ fun SetupScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
         ) {
-
+            navController.navigate("meeting") {
+                popUpTo(0)
+            }
         }
     }
 
