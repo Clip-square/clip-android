@@ -44,7 +44,8 @@ android {
 }
 
 dependencies {
-    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+    implementation(libs.wheelpickercompose)
+    implementation(libs.charts)
 
     // icon
     implementation(libs.androidx.material.icons.extended) // 최신 버전 사용
