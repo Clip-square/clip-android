@@ -68,7 +68,7 @@ fun SetupScreen(
 
     Box(
         modifier = Modifier
-            .padding(horizontal = 30.dp, vertical = 72.dp)
+            .padding(horizontal = 20.dp, vertical = 72.dp)
             .fillMaxSize()
     ) {
         Column(
