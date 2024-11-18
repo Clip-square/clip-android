@@ -1,7 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.qpeterp.clip.presentation.feature.main.setup.screen
-
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,16 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerColors
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.qpeterp.clip.domain.model.meeting.SubTopic
+import com.commandiron.wheel_picker_compose.WheelTimePicker
+import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.presentation.core.ClipButton
 import com.qpeterp.clip.presentation.core.ClipDialog
 import com.qpeterp.clip.presentation.core.ClipTextField
@@ -158,25 +157,9 @@ fun SetupScreen(
                     color = Color.Black,
                     modifier = Modifier.fillMaxWidth()
                 )
-                TimeInput(
-                    colors = TimePickerColors(
-                        clockDialColor = Color.Black,  // 시계 다이얼 배경 색상 (검정)
-                        selectorColor = Color.White,   // 선택기 색상 (흰색)
-                        containerColor = Color.Black,  // 배경 색상 (검정)
-                        periodSelectorBorderColor = Color.White,  // 기간 선택기 테두리 색상 (흰색)
-                        clockDialSelectedContentColor = Color.White,  // 시계 다이얼 선택된 항목 텍스트 색상 (흰색)
-                        clockDialUnselectedContentColor = Color.Gray, // 시계 다이얼 선택되지 않은 항목 텍스트 색상 (회색)
-                        periodSelectorSelectedContainerColor = Color.Black,  // 기간 선택기 선택된 배경 색상 (검정)
-                        periodSelectorUnselectedContainerColor = Color.Gray,  // 기간 선택기 선택되지 않은 배경 색상 (회색)
-                        periodSelectorSelectedContentColor = Color.White,  // 기간 선택기 선택된 항목 텍스트 색상 (흰색)
-                        periodSelectorUnselectedContentColor = Color.Black,  // 기간 선택기 선택되지 않은 항목 텍스트 색상 (검정)
-                        timeSelectorSelectedContainerColor = Color.Black,  // 시간 선택기 선택된 배경 색상 (검정)
-                        timeSelectorUnselectedContainerColor = Color.Gray,  // 시간 선택기 선택되지 않은 배경 색상 (회색)
-                        timeSelectorSelectedContentColor = Color.White,  // 시간 선택기 선택된 항목 텍스트 색상 (흰색)
-                        timeSelectorUnselectedContentColor = Color.Black  // 시간 선택기 선택되지 않은 항목 텍스트 색상 (검정)
-                    ),
-                    state = rememberTimePickerState(),
-                )
+                WheelTimePicker { snappedTime ->
+                    Log.d(Constant.TAG, "snappedTime is $snappedTime")
+                }
             }
 
             Column(
