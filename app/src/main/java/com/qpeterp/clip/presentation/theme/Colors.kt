@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 
 object Colors {
     val LightGray = Color(0xFFEBEDF2)
+    val DarkGray = Color(0xFF747474)
     val White = Color.White
     val Black = Color.Black
     val Transparent = Color.Transparent
