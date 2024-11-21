@@ -14,4 +14,9 @@ sealed class NavGroup {
         const val MEETING = "meeting"
         const val END = "end"
     }
+
+    data object Features: NavGroup() {
+        const val MANAGE_TEAM = "manageTeam"
+        const val RECODE = "recode"
+    }
 }

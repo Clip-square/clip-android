@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateTeamViewModel @Inject constructor(
+class ManageTeamViewModel @Inject constructor(
 ) : ViewModel() {
     private val _teamList = MutableStateFlow<List<Team>>(listOf(Team("clip", 4)))
     val teamList: StateFlow<List<Team>> get() = _teamList

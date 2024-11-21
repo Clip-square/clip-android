@@ -15,6 +15,7 @@ import com.qpeterp.clip.presentation.feature.main.meeting.screen.MeetingScreen
 import com.qpeterp.clip.presentation.feature.main.setup.screen.SetupScreen
 import com.qpeterp.clip.presentation.feature.auth.login.screen.LoginScreen
 import com.qpeterp.clip.presentation.feature.auth.register.viewmodel.RegisterViewModel
+import com.qpeterp.clip.presentation.feature.team.screen.ManageTeamScreen
 
 @ExperimentalMaterial3Api
 @Composable
@@ -59,6 +60,14 @@ fun NavigationGraph(
 
         composable(NavGroup.Main.END) {
             EndScreen(navController)
+        }
+
+        // Feature 그룹 네비게이션
+        composable(NavGroup.Features.RECODE) {
+        }
+
+        composable(NavGroup.Features.MANAGE_TEAM) {
+            ManageTeamScreen(navController)
         }
     }
 }

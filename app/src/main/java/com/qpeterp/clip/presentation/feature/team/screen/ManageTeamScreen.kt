@@ -33,13 +33,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.qpeterp.clip.domain.model.team.Team
-import com.qpeterp.clip.presentation.feature.team.viewmodel.CreateTeamViewModel
+import com.qpeterp.clip.presentation.feature.team.viewmodel.ManageTeamViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
 @Composable
-fun CreateTeamScreen(
+fun ManageTeamScreen(
     navController: NavController,
-    viewModel: CreateTeamViewModel = hiltViewModel()
+    viewModel: ManageTeamViewModel = hiltViewModel()
 ) {
     val teamList = viewModel.teamList.collectAsState().value
 
@@ -127,10 +127,10 @@ private fun TeamCard(item: Team) {
 
 @Preview(showBackground = true)
 @Composable
-private fun CreateTeamScreenPreView() {
+private fun ManageTeamScreenPreView() {
     val context = LocalContext.current
-    CreateTeamScreen(
+    ManageTeamScreen(
         navController = NavController(context),
-        viewModel = CreateTeamViewModel()
+        viewModel = ManageTeamViewModel()
     )
 }
