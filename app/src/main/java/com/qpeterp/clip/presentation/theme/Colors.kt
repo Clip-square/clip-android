@@ -12,6 +12,7 @@ object Colors {
     val White = Color.White
     val Black = Color.Black
     val Transparent = Color.Transparent
+    val Red = Color(0xFFEE1400)
 }
 
 @Composable
