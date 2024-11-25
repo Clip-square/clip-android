@@ -1,4 +1,4 @@
-package com.qpeterp.clip.presentation.feature.main.meeting.screen
+package com.qpeterp.clip.presentation.feature.meeting.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.qpeterp.clip.presentation.core.ClipButton
-import com.qpeterp.clip.presentation.feature.main.meeting.viewmodel.MeetingViewModel
+import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
 @Composable

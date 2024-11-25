@@ -1,4 +1,4 @@
-package com.qpeterp.clip.presentation.feature.main.end.viewmodel
+package com.qpeterp.clip.presentation.feature.end.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.qpeterp.clip.presentation.feature.main.end.screen
+package com.qpeterp.clip.presentation.feature.end.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import com.github.tehras.charts.bar.renderer.xaxis.SimpleXAxisDrawer
 import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
 import com.github.tehras.charts.piechart.animation.simpleChartAnimation
 import com.qpeterp.clip.presentation.core.ClipButton
-import com.qpeterp.clip.presentation.feature.main.end.viewmodel.EndViewModel
+import com.qpeterp.clip.presentation.feature.end.viewmodel.EndViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
 @Composable

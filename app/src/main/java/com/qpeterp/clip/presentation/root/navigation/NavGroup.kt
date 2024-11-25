@@ -10,13 +10,16 @@ sealed class NavGroup {
     }
 
     data object Main: NavGroup() {
+        const val MAIN = "main"
+        const val MEETING_HISTORY = "meetingHistory"
         const val SETUP = "setup"
-        const val MEETING = "meeting"
-        const val END = "end"
+        const val SETTING = "setting"
     }
 
     data object Features: NavGroup() {
         const val MANAGE_TEAM = "manageTeam"
         const val RECODE = "recode"
+        const val MEETING = "meeting"
+        const val END = "end"
     }
 }
