@@ -1,5 +1,6 @@
 package com.qpeterp.clip.presentation.feature.auth.register.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.presentation.core.ClipAuthTextField
 import com.qpeterp.clip.presentation.core.ClipButton
+import com.qpeterp.clip.presentation.extensions.shortToast
 import com.qpeterp.clip.presentation.feature.auth.register.viewmodel.RegisterViewModel
 import com.qpeterp.clip.presentation.theme.Colors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterNameScreen(
@@ -98,19 +104,19 @@ fun RegisterNameScreen(
                         return@ClipButton
                     }
                     viewModel.inputName(userName.value)
-//                    CoroutineScope(Dispatchers.Main).launch {
-//                        viewModel.register(
-//                            onRegisterSuccess = {
-//                                navController.navigate("registerComplete") {
-//                                    Log.d(Constant.TAG, "회원가입 성공 성공")
-//                                    popUpTo("registerName") { inclusive = true }
-//                                }
-//                            },
-//                            onRegisterFailure = { message ->
-//                                context.shortToast(message)
-//                            }
-//                        )
-//                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        viewModel.register(
+                            onRegisterSuccess = {
+                                navController.navigate("registerComplete") {
+                                    Log.d(Constant.TAG, "회원가입 성공 성공")
+                                    popUpTo("registerName") { inclusive = true }
+                                }
+                            },
+                            onRegisterFailure = { message ->
+                                context.shortToast(message)
+                            }
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             )

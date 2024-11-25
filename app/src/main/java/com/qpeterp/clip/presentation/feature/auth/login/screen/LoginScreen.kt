@@ -44,7 +44,7 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    var userId by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -100,9 +100,9 @@ fun LoginScreen(
 
             Column {
                 ClipAuthTextField(
-                    label = "아이디",
+                    label = "이메일",
                     keyboardType = KeyboardType.Text,
-                    onValueChange = { userId = it } // 상태 변경 처리
+                    onValueChange = { email = it } // 상태 변경 처리
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -127,23 +127,23 @@ fun LoginScreen(
             ClipButton(
                 text = "로그인",
                 onClick = {
-                    if (userId.isEmpty() || password.isEmpty()) {
+                    if (email.isEmpty() || password.isEmpty()) {
                         errorMessage = "빈값을 채워주세요."
                         return@ClipButton
                     }
-//                    CoroutineScope(Dispatchers.Main).launch {
-//                        viewModel.login(userId, password,
-//                            onLoginSuccess = {
-//                                navController.navigate("main") {
-//                                    Log.d(Constant.TAG, "로그인 성공")
-//                                    popUpTo("login") { inclusive = true }
-//                                }
-//                            },
-//                            onLoginFailure = { message ->
-//                                errorMessage = message
-//                            }
-//                        )
-//                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        viewModel.login(email, password,
+                            onLoginSuccess = {
+                                navController.navigate("main") {
+                                    Log.d(Constant.TAG, "로그인 성공")
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            },
+                            onLoginFailure = { message ->
+                                errorMessage = message
+                            }
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             )

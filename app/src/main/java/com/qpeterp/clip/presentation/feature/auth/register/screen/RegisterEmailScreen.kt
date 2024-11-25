@@ -29,11 +29,11 @@ import com.qpeterp.clip.presentation.theme.Colors
 import com.qpeterp.clip.presentation.feature.auth.register.viewmodel.RegisterViewModel
 
 @Composable
-fun RegisterIdScreen(
+fun RegisterEmailScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
-    val userId = remember { mutableStateOf(viewModel.id) }
+    val email = remember { mutableStateOf(viewModel.id) }
     val errorMessage = remember { mutableStateOf("") }
     HandleBack(
         viewModel,
@@ -53,20 +53,20 @@ fun RegisterIdScreen(
                 modifier = Modifier.padding(top = 80.dp)
             ) {
                 Text(
-                    "유저 아이디",
+                    "이메일",
                     color = Colors.Black,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    "를 입력해주세요.",
+                    "을 입력해주세요.",
                     color = Colors.Black,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
             Text(
-                "로그인 시, 사용될 아이디입니다.",
+                "로그인 시, 사용될 이메일입니다.",
                 color = Colors.Black,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -77,10 +77,10 @@ fun RegisterIdScreen(
 
             Column {
                 ClipAuthTextField(
-                    label = "아이디",
-                    currentText = userId.value,
+                    label = "이메일",
+                    currentText = email.value,
                     keyboardType = KeyboardType.Text,
-                    onValueChange = { userId.value = it } // 상태 변경 처리
+                    onValueChange = { email.value = it } // 상태 변경 처리
                 )
 
                 if (errorMessage.value.isNotEmpty()) {
@@ -97,11 +97,11 @@ fun RegisterIdScreen(
             ClipButton(
                 text = "다음으로",
                 onClick = {
-                    if (userId.value.isEmpty()) {
-                        errorMessage.value = "아이디를 입력해주세요."
+                    if (email.value.isEmpty()) {
+                        errorMessage.value = "이메일을 입력해주세요."
                         return@ClipButton
                     }
-                    viewModel.inputId(userId.value)
+                    viewModel.inputId(email.value)
 
                     navController.navigate("registerPassword")
                 },

@@ -2,12 +2,13 @@ package com.qpeterp.clip.presentation.feature.auth.register.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.qpeterp.clip.domain.usecase.auth.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-//    private val registerUsCase: RegisterUseCase,
+    private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
     private val _id = mutableStateOf("")
     val id get() = _id.value
@@ -36,28 +37,26 @@ class RegisterViewModel @Inject constructor(
         _name.value = ""
     }
 
-//    suspend fun register(
-//        onRegisterSuccess: () -> Unit,
-//        onRegisterFailure: (String) -> Unit
-//        ) {
-//        val result = registerUsCase(
-//            param = RegisterUseCase.Param(
-//                loginId = id,
-//                password = password,
-//                name = name
-//            )
-//        )
-//
-//        result.onSuccess {
-//            if (it.isSuccessful) {
-//                onRegisterSuccess()
-//            } else {
-//                val errorBody = it.errorBody()?.string() ?: "서버 에러"
-//                val message = JSONObject(errorBody).optString("message", errorBody)
-//                onRegisterFailure(message)
-//            }
-//        }.onFailure {
-//            onRegisterFailure(it.message.toString())
-//        }
-//    }
+    suspend fun register(
+        onRegisterSuccess: () -> Unit,
+        onRegisterFailure: (String) -> Unit
+        ) {
+        val result = registerUseCase(
+            param = RegisterUseCase.Param(
+                email = id,
+                password = password,
+                name = name
+            )
+        )
+
+        result.onSuccess {
+            if (it.isSuccessful) {
+                onRegisterSuccess()
+            } else {
+                onRegisterFailure(it.message())
+            }
+        }.onFailure {
+            onRegisterFailure(it.message.toString())
+        }
+    }
 }

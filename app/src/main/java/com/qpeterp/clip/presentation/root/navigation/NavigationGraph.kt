@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.qpeterp.clip.presentation.feature.auth.register.screen.RegisterCompleteScreen
-import com.qpeterp.clip.presentation.feature.auth.register.screen.RegisterIdScreen
+import com.qpeterp.clip.presentation.feature.auth.register.screen.RegisterEmailScreen
 import com.qpeterp.clip.presentation.feature.auth.register.screen.RegisterNameScreen
 import com.qpeterp.clip.presentation.feature.auth.register.screen.RegisterPasswordScreen
 import com.qpeterp.clip.presentation.feature.main.end.screen.EndScreen
@@ -34,7 +34,7 @@ fun NavigationGraph(
         }
 
         composable(NavGroup.Auth.REGISTER_ID) {
-            RegisterIdScreen(navController, registerViewModel)
+            RegisterEmailScreen(navController, registerViewModel)
         }
 
         composable(NavGroup.Auth.REGISTER_PASSWORD) {
