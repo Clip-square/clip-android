@@ -20,10 +20,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"${properties["BASE_URL"]}\"")
+        }
+
         release {
+            buildConfigField("String", "BASE_URL", "\"${properties["BASE_URL"]}\"")
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -32,32 +41,55 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
 dependencies {
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0") // OkHttp 핵심 라이브러리
+
+    // Retrofit 라이브러리
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
+    // wheel picker
     implementation(libs.wheelpickercompose)
+    // chart
     implementation(libs.charts)
 
     // icon
     implementation(libs.androidx.material.icons.extended) // 최신 버전 사용
     // hilt & serialization
     // Hilt Android 의존성
-    implementation(libs.hilt.android )
+    implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     ksp(libs.dagger.compiler) // Dagger compiler
 
     // Jetpack Compose navigation
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
     // viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 

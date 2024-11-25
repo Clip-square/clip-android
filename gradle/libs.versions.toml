@@ -1,5 +1,6 @@
 [versions]
-agp = "8.7.0"
+agp = "8.7.2"
+charts = "0.2.4-alpha"
 hiltAndroid = "2.49"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.21"
@@ -12,12 +13,15 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 navigationCompose = "2.8.4"
 hiltAndroidGradlePlugin = "2.49"
+materialIconsExtended = "1.7.5"
+wheelpickercompose = "1.1.11"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+charts = { module = "com.github.tehras:charts", version.ref = "charts" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -35,6 +39,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroidGradlePlugin" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "hiltAndroidGradlePlugin" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+wheelpickercompose = { module = "com.github.commandiron:WheelPickerCompose", version.ref = "wheelpickercompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
