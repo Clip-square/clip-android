@@ -100,15 +100,24 @@ fun RegisterEmailScreen(
                     if (email.value.isEmpty()) {
                         errorMessage.value = "이메일을 입력해주세요."
                         return@ClipButton
+                    } else if (!isValidEmail(email.value)) {
+                        errorMessage.value = "유효하지 않은 이메일 형식입니다."
+                        return@ClipButton
                     }
-                    viewModel.inputId(email.value)
 
+                    viewModel.inputId(email.value)
                     navController.navigate("registerPassword")
                 },
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
+}
+
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+
+    return emailRegex.matches(email)
 }
 
 @Composable

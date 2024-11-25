@@ -103,13 +103,15 @@ fun RegisterPasswordScreen(
                     if (userPassword.value.isEmpty()) {
                         errorMessage.value = "비밀번호를 입력해주세요."
                         return@ClipButton
-                    }
-                    if (checkPassword.value != userPassword.value) {
+                    } else if (checkPassword.value != userPassword.value) {
                         errorMessage.value = "비밀번호가 일치하지 않습니다."
                         return@ClipButton
+                    } else if (userPassword.value.length < 9) {
+                        errorMessage.value = "비밀번호는 8자리 초과로 입력해주세요."
+                        return@ClipButton
                     }
-                    viewModel.inputPassword(userPassword.value)
 
+                    viewModel.inputPassword(userPassword.value)
                     navController.navigate("registerName")
                 },
                 modifier = Modifier.fillMaxWidth()

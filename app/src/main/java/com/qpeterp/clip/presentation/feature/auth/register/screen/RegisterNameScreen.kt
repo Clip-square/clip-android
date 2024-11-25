@@ -102,7 +102,11 @@ fun RegisterNameScreen(
                     if (userName.value.isEmpty()) {
                         errorMessage.value = "이름을 입력해주세요."
                         return@ClipButton
+                    } else if (userName.value.length < 2 || userName.value.length > 16) {
+                        errorMessage.value = "이름은 2자 이상 16자 이하로 입력해주세요."
+                        return@ClipButton
                     }
+
                     viewModel.inputName(userName.value)
                     CoroutineScope(Dispatchers.Main).launch {
                         viewModel.register(

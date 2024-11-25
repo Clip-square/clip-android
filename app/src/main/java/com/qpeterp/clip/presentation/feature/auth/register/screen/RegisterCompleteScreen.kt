@@ -54,7 +54,7 @@ fun RegisterCompleteScreen(
             ClipButton(
                 text = "로그인",
                 onClick = {
-                    navController.navigate("login")
+                    navController.navigate("main") { popUpTo(0) }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
