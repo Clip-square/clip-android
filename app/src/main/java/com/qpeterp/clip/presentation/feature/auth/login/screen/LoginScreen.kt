@@ -136,7 +136,7 @@ fun LoginScreen(
                             onLoginSuccess = {
                                 navController.navigate("main") {
                                     Log.d(Constant.TAG, "로그인 성공")
-                                    popUpTo("login") { inclusive = true }
+                                    popUpTo(0)
                                 }
                             },
                             onLoginFailure = { message ->
