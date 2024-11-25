@@ -18,7 +18,7 @@ import com.qpeterp.clip.presentation.feature.auth.register.viewmodel.RegisterVie
 import com.qpeterp.clip.presentation.feature.main.history.screen.HistoryScreen
 import com.qpeterp.clip.presentation.feature.main.screen.MainScreen
 import com.qpeterp.clip.presentation.feature.main.setting.screen.SettingScreen
-import com.qpeterp.clip.presentation.feature.team.screen.ManageTeamScreen
+import com.qpeterp.clip.presentation.feature.organizations.screen.ManageTeamScreen
 
 @ExperimentalMaterial3Api
 @Composable
@@ -70,9 +70,6 @@ fun NavigationGraph(
         }
 
         // Feature 그룹 네비게이션
-        composable(NavGroup.Features.RECODE) {
-        }
-
         composable(NavGroup.Features.MANAGE_TEAM) {
             ManageTeamScreen(navController)
         }
