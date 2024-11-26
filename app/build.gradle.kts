@@ -67,6 +67,7 @@ dependencies {
 
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0") // OkHttp 핵심 라이브러리
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
 
     // Retrofit 라이브러리
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
