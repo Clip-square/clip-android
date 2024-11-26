@@ -36,4 +36,8 @@ class AuthRepositoryImpl @Inject constructor(
             )
         )
     }
+
+    override suspend fun logout(): Response<Unit> {
+        return authService.logout()
+    }
 }
