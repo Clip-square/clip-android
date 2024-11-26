@@ -1,7 +1,9 @@
 package com.qpeterp.clip.di.module
 
 import com.qpeterp.clip.data.repository.AuthRepositoryImpl
+import com.qpeterp.clip.data.repository.OrganizationRepositoryImpl
 import com.qpeterp.clip.domain.repository.AuthRepository
+import com.qpeterp.clip.domain.repository.OrganizationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,4 +18,10 @@ abstract class RepositoryModule {
     abstract fun providesAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Singleton
+    @Binds
+    abstract fun providesOrganizationRepository(
+        organizationRepositoryImpl: OrganizationRepositoryImpl
+    ): OrganizationRepository
 }
