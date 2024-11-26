@@ -1,4 +1,4 @@
-package com.qpeterp.clip.presentation.feature.team.viewmodel
+package com.qpeterp.clip.presentation.feature.organizations.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.qpeterp.clip.domain.model.team.Team
