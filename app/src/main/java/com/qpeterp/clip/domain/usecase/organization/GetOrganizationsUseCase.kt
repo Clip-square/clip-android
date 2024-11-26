@@ -5,7 +5,7 @@ import com.qpeterp.clip.domain.repository.OrganizationRepository
 import retrofit2.Response
 import javax.inject.Inject
 
-class OrganizationUseCase @Inject constructor(
+class GetOrganizationsUseCase @Inject constructor(
     private val organizationRepository: OrganizationRepository
 ) {
     suspend operator fun invoke(): Result<Response<List<Organizations>>> {

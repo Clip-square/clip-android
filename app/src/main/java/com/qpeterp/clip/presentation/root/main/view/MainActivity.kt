@@ -10,8 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.qpeterp.clip.application.ClipApplication
-import com.qpeterp.clip.application.PreferenceManager
 import com.qpeterp.clip.presentation.root.navigation.NavigationGraph
 import com.qpeterp.clip.presentation.theme.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,11 +52,8 @@ class MainActivity : ComponentActivity() {
         requestPermissions()
 
         enableEdgeToEdge()
-        ClipApplication.prefs = PreferenceManager(application)
-        val prefs = ClipApplication.prefs
 
-        val isLoggedIn = prefs.token.isNotEmpty()
-
+        val isLoggedIn = false
         setContent {
             MyAppTheme {
                 MyApp(isLoggedIn)

@@ -66,7 +66,8 @@ fun ClipAuthTextField(
                         } else {
                             Icons.Outlined.VisibilityOff
                         },
-                        contentDescription = if (passwordVisible.value) "Hide password" else "Show password"
+                        contentDescription = if (passwordVisible.value) "Hide password" else "Show password",
+                        tint = Colors.Black
                     )
                 }
             }
