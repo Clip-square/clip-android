@@ -1,10 +1,11 @@
 package com.qpeterp.clip.data.data.organization
 
+import com.qpeterp.clip.data.data.auth.User
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Organizations(
+data class Organization(
     val id: Int,
     val name: String,
     val owner: String,
@@ -12,5 +13,14 @@ data class Organizations(
     val inviteCode: String,
     @SerialName("created_at")
     val createdAt: String,
-    val members: List<Int>
+    val members: List<Member>,
+)
+
+@Serializable
+data class Member(
+    val id: Int,
+    val organization: Int,
+    val user: User,
+    @SerialName("joined_at")
+    val joinedAt: String,
 )
