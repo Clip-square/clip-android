@@ -93,7 +93,7 @@ class ManageTeamViewModel @Inject constructor(
         }
     }
 
-    fun getOrganization(organizationId: Int, onSuccess: () -> Unit, onFailed: () -> Unit) {
+    fun getOrganization(organizationId: Int, onSuccess: (Int) -> Unit, onFailed: () -> Unit) {
         Log.d(Constant.TAG, "조직 조회 organizationId: $organizationId")
         viewModelScope.launch {
             getOrganizationUseCase(
@@ -101,7 +101,7 @@ class ManageTeamViewModel @Inject constructor(
             ).onSuccess {
                 if (it.isSuccessful) {
                     Log.d(Constant.TAG, "조직 조회 성공! ${it.body()}")
-                    onSuccess()
+                    onSuccess(it.body()!!.id)
                 } else {
                     Log.d(Constant.TAG, "조직 조회 실패 ${it.message()}")
                     onFailed()

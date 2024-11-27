@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.data.data.organization.Organizations
+import com.qpeterp.clip.presentation.feature.main.viewmodel.MainViewModel
 import com.qpeterp.clip.presentation.feature.organizations.viewmodel.ManageTeamViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
@@ -85,6 +86,7 @@ fun ManageTeamScreen(
                             viewModel.getOrganization(
                                 it.id,
                                 onSuccess = {
+                                    navController.navigate("main")
                                     Log.d(Constant.TAG, "한 조직 조회 成功(성공이라는 뜻)")
                                 },
                                 onFailed = {
@@ -150,7 +152,10 @@ fun ManageTeamScreen(
         type = dialogState.first,
         currentText = dialogText,
         onValueChange = { dialogText = it },
-        onDismiss = { dialogState = Pair(0, false) },
+        onDismiss = {
+            dialogState = Pair(0, false)
+            dialogText = ""
+        },
         onConfirm = {
             when (it) {
                 1 -> {
@@ -177,7 +182,7 @@ fun ManageTeamScreen(
                     )
                 }
             }
-
+            dialogText = ""
             dialogState = Pair(0, false)
         }
     )

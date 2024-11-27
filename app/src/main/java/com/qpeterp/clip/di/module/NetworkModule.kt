@@ -3,6 +3,7 @@ package com.qpeterp.clip.di.module
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.qpeterp.clip.BuildConfig
 import com.qpeterp.clip.data.remote.service.AuthService
+import com.qpeterp.clip.data.remote.service.MeetingService
 import com.qpeterp.clip.data.remote.service.OrganizationService
 import dagger.Module
 import dagger.Provides
@@ -47,6 +48,11 @@ class NetworkModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMeetingService(retrofit: Retrofit): MeetingService =
+        retrofit.create(MeetingService::class.java)
 
     @Provides
     @Singleton
