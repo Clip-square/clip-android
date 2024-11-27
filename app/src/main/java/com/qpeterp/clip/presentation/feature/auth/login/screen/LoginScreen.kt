@@ -134,7 +134,11 @@ fun LoginScreen(
                     CoroutineScope(Dispatchers.Main).launch {
                         viewModel.login(email, password,
                             onLoginSuccess = {
-                                navController.navigate("main") {
+//                                navController.navigate("main") {
+//                                    Log.d(Constant.TAG, "로그인 성공")
+//                                    popUpTo(0)
+//                                }
+                                navController.navigate("manageTeam") {
                                     Log.d(Constant.TAG, "로그인 성공")
                                     popUpTo(0)
                                 }
