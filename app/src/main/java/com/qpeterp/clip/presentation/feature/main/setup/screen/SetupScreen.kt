@@ -3,18 +3,21 @@
 package com.qpeterp.clip.presentation.feature.main.setup.screen
 
 import android.util.Log
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,27 +46,14 @@ import com.qpeterp.clip.presentation.core.ClipTextField
 import com.qpeterp.clip.presentation.feature.main.setup.viewmodel.SetupViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SetupScreen(
     navController: NavController,
     viewModel: SetupViewModel = hiltViewModel(),
 ) {
     var meetingTopic by remember { mutableStateOf("") }
-    var isRecoding by remember { mutableStateOf(true) }
     var showDeleteSubTopicDialogState by remember { mutableStateOf(Pair(false, 0)) }
-
-    val saveButtonColor by animateColorAsState(
-        targetValue = if (isRecoding) Colors.Black else Colors.LightGray, label = ""
-    )
-    val saveTextColor by animateColorAsState(
-        targetValue = if (isRecoding) Colors.White else Colors.Black, label = ""
-    )
-    val discardButtonColor by animateColorAsState(
-        targetValue = if (!isRecoding) Colors.Black else Colors.LightGray, label = ""
-    )
-    val discardTextColor by animateColorAsState(
-        targetValue = if (!isRecoding) Colors.White else Colors.Black, label = ""
-    )
     val subTopicList by viewModel.meetingSubTopicList.collectAsState()
 
     Box(
@@ -163,34 +153,42 @@ fun SetupScreen(
                     }
 
                     Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        val items = List(20) { "문진위" }
+
                         Text(
-                            text = "음성 파일 저장 여부",
+                            text = "회의 참여 인원",
+                            textAlign = TextAlign.Left,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
+                            color = Color.Black,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        Row(
+                        FlowRow(
+                            maxItemsInEachRow = 5, // 수평 간격
+                            maxLines = 120, // 수직 간격
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            ClipButton(
-                                text = "저장 안함",
-                                textColor = discardTextColor,
-                                backgroundColor = discardButtonColor,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                isRecoding = false
-                            }
-                            ClipButton(
-                                text = "저장",
-                                textColor = saveTextColor,
-                                backgroundColor = saveButtonColor,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                isRecoding = true
+                            items.forEach { item ->
+                                Box(
+                                    modifier = Modifier
+                                        .background(Colors.White, shape = RoundedCornerShape(100.dp))
+                                        .border(2.dp, Colors.Black, RoundedCornerShape(100.dp))
+                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = item,
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 16.sp,
+                                        color = Color.Black
+                                    )
+                                }
                             }
                         }
                     }
