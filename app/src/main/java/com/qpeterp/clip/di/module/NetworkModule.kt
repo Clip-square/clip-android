@@ -5,6 +5,10 @@ import com.qpeterp.clip.BuildConfig
 import com.qpeterp.clip.data.remote.service.AuthService
 import com.qpeterp.clip.data.remote.service.MeetingService
 import com.qpeterp.clip.data.remote.service.OrganizationService
+import com.qpeterp.clip.domain.usecase.meeting.CreateMeetingUseCase
+import com.qpeterp.clip.domain.usecase.meeting.StartMeetingUseCase
+import com.qpeterp.clip.domain.usecase.organization.GetOrganizationMembersUseCase
+import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,4 +62,18 @@ class NetworkModule {
     @Singleton
     fun provideOrganizationService(retrofit: Retrofit): OrganizationService =
         retrofit.create(OrganizationService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMeetingViewModel(
+        organizationMembersUseCase: GetOrganizationMembersUseCase,
+        createMeetingUseCase: CreateMeetingUseCase,
+        startMeetingUseCase: StartMeetingUseCase
+    ): MeetingViewModel {
+        return MeetingViewModel(
+            organizationMembersUseCase,
+            createMeetingUseCase,
+            startMeetingUseCase
+        )
+    }
 }
