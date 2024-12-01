@@ -44,14 +44,14 @@ import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.presentation.core.ClipButton
 import com.qpeterp.clip.presentation.core.ClipDialog
 import com.qpeterp.clip.presentation.core.ClipTextField
-import com.qpeterp.clip.presentation.feature.main.setup.viewmodel.SetupViewModel
+import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SetupScreen(
     navController: NavController,
-    viewModel: SetupViewModel = hiltViewModel(),
+    viewModel: MeetingViewModel = hiltViewModel(),
 ) {
     var meetingTopic by remember { mutableStateOf("") }
     var showDeleteSubTopicDialogState by remember { mutableStateOf(Pair(false, 0)) }
@@ -59,6 +59,7 @@ fun SetupScreen(
     val memberList = viewModel.memberList.collectAsState().value
     val isLoading by viewModel.isLoading.collectAsState()
     val partUserId by viewModel.partUserId.collectAsState()
+    val meetingData = viewModel.meetingData.collectAsState().value
     var meetingTime = ""
 
     Box(
@@ -221,14 +222,18 @@ fun SetupScreen(
                 meetingTopic = meetingTopic,
                 meetingTime = "$meetingTime:00",
                 onSuccess = {
-                    navController.navigate("meeting") {
-                        popUpTo(0)
-                    }
+                    viewModel.setMeetingData(it)
                 },
                 onFailed = {
 
                 }
             )
+        }
+    }
+
+    if (meetingData != null) {
+        navController.navigate("meeting") {
+            popUpTo(0)
         }
     }
 

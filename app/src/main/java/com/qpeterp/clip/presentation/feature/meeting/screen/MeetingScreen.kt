@@ -19,10 +19,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.rounded.RecordVoiceOver
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,9 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.qpeterp.clip.data.data.meeting.Section
 import com.qpeterp.clip.presentation.core.ClipButton
 import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
 import com.qpeterp.clip.presentation.theme.Colors
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun MeetingScreen(
@@ -49,7 +60,8 @@ fun MeetingScreen(
     val black = if (meetingState) Colors.Black else Colors.White
     val white = if (meetingState) Colors.White else Colors.Black
 
-    val dummyList = listOf("디자인 일정", "디자인 이정", "디자인 삼정", "디자인 사정")
+    val meetingData = viewModel.meetingData.collectAsState().value
+    val sections = meetingData?.sections ?: listOf(Section("tldkjskls", ""))
     val currentSubTopicIndex = viewModel.subTopicIndex.collectAsState().value
 
     Box(
@@ -58,72 +70,76 @@ fun MeetingScreen(
             .padding(horizontal = 30.dp, vertical = 72.dp)
             .fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(58.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "남은 회의 시간",
-                    color = white,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = "2:00",
-                    color = white,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-
+        if (meetingData == null) {
+            CircularProgressIndicator()
+        } else {
             Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(horizontal = 42.dp)
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(58.dp)
             ) {
-                Text(
-                    text = "회의 주제",
-                    color = white,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = "프로젝트 일정 구체화 프로젝트 일정 구체화 프로젝트 일정 구체화 프로젝트 일정 구체화",
-                    textAlign = TextAlign.Center,
-                    lineHeight = TextUnit(1.2f, TextUnitType.Em),
-                    color = white,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "남은 회의 시간",
+                        color = white,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    TimerScreen(
+                        initialTime = meetingData.totalDuration,
+                        initialTextColor = white,
+                        isPaused = !meetingState
+                    )
+                }
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                itemsIndexed(dummyList) { index, item ->
-                    MeetingSubTopicCard(
-                        subTopic = item,
-                        subTopicIndex = index,
-                        black = black,
-                        white = white,
-                        isLastIndex = if (index == dummyList.size - 1) true else false,
-                        isCurrentIndex = currentSubTopicIndex == index
-                    ) {
-                        if (index == dummyList.size - 1) {
-                            navController.navigate("end") {
-                                popUpTo(0)
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 42.dp)
+                ) {
+                    Text(
+                        text = "회의 주제",
+                        color = white,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Text(
+                        text = meetingData.title,
+                        textAlign = TextAlign.Center,
+                        lineHeight = TextUnit(1.2f, TextUnitType.Em),
+                        color = white,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    itemsIndexed(sections) { index, item ->
+                        MeetingSubTopicCard(
+                            subTopic = item.name,
+                            subTopicIndex = index,
+                            black = black,
+                            white = white,
+                            isLastIndex = if (index == sections.size - 1) true else false,
+                            isCurrentIndex = currentSubTopicIndex == index
+                        ) {
+                            if (index == sections.size - 1) {
+                                navController.navigate("end") {
+                                    popUpTo(0)
+                                }
+                                return@MeetingSubTopicCard
                             }
-                            return@MeetingSubTopicCard
+                            // TODO: endTime 저장하기
+                            viewModel.updateSubTopicIndex(index + 1)
                         }
-                        viewModel.updateSubTopicIndex(index + 1)
                     }
                 }
             }
@@ -254,4 +270,58 @@ fun MeetingSubTopicCard(
             )
         }
     }
+}
+
+@Composable
+fun TimerScreen(
+    initialTime: String,
+    initialTextColor: Color = Color.Black,
+    expiredTextColor: Color = Color.Red,
+    isPaused: Boolean
+) {
+    var remainingTime by remember { mutableIntStateOf(parseTimeToSeconds(initialTime)) }
+    var isExpired by remember { mutableStateOf(false) }
+
+    LaunchedEffect(remainingTime, isPaused) {
+        if (!isPaused) { // 일시정지 상태가 아닐 때만 실행
+            if (remainingTime > 0) {
+                kotlinx.coroutines.delay(1000L) // 1초마다 업데이트
+                remainingTime -= 1
+            } else {
+                isExpired = true
+                remainingTime -= 1 // 음수로 증가
+            }
+        }
+    }
+
+    val formattedTime = formatSecondsToTime(remainingTime)
+
+    Text(
+        text = formattedTime,
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Medium,
+        color = if (isExpired) expiredTextColor else initialTextColor
+    )
+}
+
+fun formatSecondsToTime(seconds: Int): String {
+    val absSeconds = kotlin.math.abs(seconds)
+    val sign = if (seconds < 0) "-" else ""
+    val hours = absSeconds / 3600
+    val minutes = (absSeconds % 3600) / 60
+    val secs = absSeconds % 60
+    return String.format("%s%02d:%02d:%02d", sign, hours, minutes, secs)
+}
+
+fun parseTimeToSeconds(timeString: String): Int {
+    val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val date = format.parse(timeString) ?: return 0
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+
+    val hours = calendar.get(Calendar.HOUR_OF_DAY)
+    val minutes = calendar.get(Calendar.MINUTE)
+    val seconds = calendar.get(Calendar.SECOND)
+
+    return hours * 3600 + minutes * 60 + seconds
 }
