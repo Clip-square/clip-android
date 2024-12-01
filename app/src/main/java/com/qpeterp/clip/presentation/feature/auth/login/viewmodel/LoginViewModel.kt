@@ -2,6 +2,7 @@ package com.qpeterp.clip.presentation.feature.auth.login.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.qpeterp.clip.application.ClipApplication
 import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.domain.usecase.auth.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,9 +28,11 @@ class LoginViewModel @Inject constructor(
         result.onSuccess { response ->
             if (response.isSuccessful) {
                 Log.d(Constant.TAG, "로그인 성공")
+                ClipApplication.prefs.token = response.body()!!.token.access
+                ClipApplication.prefs.userId = response.body()!!.user.id
                 onLoginSuccess()
             } else {
-                Log.e(Constant.TAG, "Login failed e: ${response.message()}")
+                Log.e(Constant.TAG, "Login failed e: ${response.message()} ${response.code()}")
                 onLoginFailure(response.message())
             }
 

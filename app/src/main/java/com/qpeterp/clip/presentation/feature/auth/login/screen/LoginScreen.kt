@@ -102,6 +102,7 @@ fun LoginScreen(
                 ClipAuthTextField(
                     label = "이메일",
                     keyboardType = KeyboardType.Text,
+                    currentText = "test@test.com",
                     onValueChange = { email = it } // 상태 변경 처리
                 )
 
@@ -110,6 +111,7 @@ fun LoginScreen(
                 ClipAuthTextField(
                     label = "비밀번호",
                     keyboardType = KeyboardType.Password,
+                    currentText = "asdfasdf1!",
                     onValueChange = { password = it } // 상태 변경 처리
                 )
 
