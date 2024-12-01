@@ -5,7 +5,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Meeting(
+data class ResponseMeeting(
+    val message: String,
+    val meeting: MeetingData
+)
+
+@Serializable
+data class Meetings(
     val meetings: List<MeetingData>
 )
 
@@ -14,14 +20,17 @@ data class MeetingData(
     val id: Int,
     val title: String,
     @SerialName("total_duration")
-    val totalDuration: Int,
-    val organization: String,
+    val totalDuration: String,
+    val organization: Int,
     @SerialName("save_minutes")
     val saveMinutes: Boolean,
     val sections: List<Section>,
     val participants: List<MeetingUser>,
-    @SerialName("created_at")
-    val createdAt: String,
+    @SerialName("is_active")
+    val isActive: ActiveType,
+    val creator: Int,
+    @SerialName("start_time")
+    val startTime: String?,
 )
 
 @Serializable
@@ -31,5 +40,7 @@ data class MeetingUser(
 
 @Serializable
 data class Section(
-    val name: String
+    val name: String,
+    @SerialName("end_time")
+    val endTime: String?
 )

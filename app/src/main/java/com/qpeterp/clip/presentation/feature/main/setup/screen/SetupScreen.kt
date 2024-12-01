@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -55,139 +56,153 @@ fun SetupScreen(
     var meetingTopic by remember { mutableStateOf("") }
     var showDeleteSubTopicDialogState by remember { mutableStateOf(Pair(false, 0)) }
     val subTopicList by viewModel.meetingSubTopicList.collectAsState()
+    val memberList = viewModel.memberList.collectAsState().value
+    val isLoading by viewModel.isLoading.collectAsState()
+    val partUserId by viewModel.partUserId.collectAsState()
+    var meetingTime = ""
 
     Box(
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 72.dp)
             .fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(35.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .padding(bottom = 72.dp)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(35.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(bottom = 72.dp)
             ) {
-                item {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    item {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "회의 주제",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Colors.Black
+                            )
+                            ClipTextField(
+                                label = "회의 주제 입력",
+                                currentText = meetingTopic,
+                            ) {
+                                meetingTopic = it
+                            }
+                        }
+                    }
+
+                    item {
                         Text(
-                            text = "회의 주제",
+                            text = "회의 목차",
                             fontSize = 14.sp,
+                            textAlign = TextAlign.Left,
                             fontWeight = FontWeight.SemiBold,
-                            color = Colors.Black
+                            color = Colors.Black,
+                            modifier = Modifier.fillMaxWidth()
                         )
+                    }
+
+                    itemsIndexed(subTopicList) { index, subTopic ->
                         ClipTextField(
-                            label = "회의 주제 입력",
-                            currentText = meetingTopic,
-                        ) {
-                            meetingTopic = it
-                        }
-                    }
-                }
-
-                item {
-                    Text(
-                        text = "회의 목차",
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Left,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Colors.Black,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                itemsIndexed(subTopicList) { index, subTopic ->
-                    ClipTextField(
-                        label = index.toString(),
-                        idValue = true,
-                        currentText = subTopic,
-                        onDelete = { showDeleteSubTopicDialogState = Pair(true, index) },
-                        idValueChange = { _, content ->
-                            viewModel.updateSubTopicText(index, content)
-                        }
-                    )
-                }
-
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Icon(
-                            imageVector = Icons.Default.AddCircle,
-                            contentDescription = "icon to add sub topic",
-                            tint = Colors.Black,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .align(Alignment.TopCenter)
-                                .clickable {
-                                    viewModel.addSubTopic()
-                                }
+                            label = index.toString(),
+                            idValue = true,
+                            currentText = subTopic.name,
+                            onDelete = { showDeleteSubTopicDialogState = Pair(true, index) },
+                            idValueChange = { _, content ->
+                                viewModel.updateSubTopicText(index, content)
+                            }
                         )
                     }
 
-                }
+                    item {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Icon(
+                                imageVector = Icons.Default.AddCircle,
+                                contentDescription = "icon to add sub topic",
+                                tint = Colors.Black,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .align(Alignment.TopCenter)
+                                    .clickable {
+                                        viewModel.addSubTopic()
+                                    }
+                            )
+                        }
+                    }
 
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "회의 시간",
-                            textAlign = TextAlign.Left,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.Black,
+                    item {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.fillMaxWidth()
-                        )
-                        WheelTimePicker { snappedTime ->
-                            Log.d(Constant.TAG, "snappedTime is $snappedTime")
-                        }
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val items = List(20) { "문진위" }
-
-                        Text(
-                            text = "회의 참여 인원",
-                            textAlign = TextAlign.Left,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.Black,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        FlowRow(
-                            maxItemsInEachRow = 5, // 수평 간격
-                            maxLines = 120, // 수직 간격
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items.forEach { item ->
-                                Box(
-                                    modifier = Modifier
-                                        .background(Colors.White, shape = RoundedCornerShape(100.dp))
-                                        .border(2.dp, Colors.Black, RoundedCornerShape(100.dp))
-                                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = item,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 16.sp,
-                                        color = Color.Black
-                                    )
+                            Text(
+                                text = "회의 시간",
+                                textAlign = TextAlign.Left,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.Black,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            WheelTimePicker { snappedTime ->
+                                meetingTime = snappedTime.toString()
+                                Log.d(Constant.TAG, "snappedTime is $snappedTime")
+                            }
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "회의 참여 인원",
+                                textAlign = TextAlign.Left,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.Black,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            FlowRow(
+                                maxItemsInEachRow = 5, // 수평 간격
+                                maxLines = 120, // 수직 간격
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                memberList.forEach { item ->
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                if (item.id in partUserId) Colors.Black else Colors.White,
+                                                shape = RoundedCornerShape(100.dp)
+                                            )
+                                            .border(2.dp, Colors.Black, RoundedCornerShape(100.dp))
+                                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                                            .clickable {
+                                                viewModel.toggleUserId(item.id)
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = item.name,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 16.sp,
+                                            color = if (item.id in partUserId) Colors.White else Colors.Black
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -202,9 +217,18 @@ fun SetupScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
         ) {
-            navController.navigate("meeting") {
-                popUpTo(0)
-            }
+            viewModel.createMeeting(
+                meetingTopic = meetingTopic,
+                meetingTime = "$meetingTime:00",
+                onSuccess = {
+                    navController.navigate("meeting") {
+                        popUpTo(0)
+                    }
+                },
+                onFailed = {
+
+                }
+            )
         }
     }
 
