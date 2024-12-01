@@ -9,6 +9,7 @@ import com.qpeterp.clip.domain.usecase.organization.CreateOrganizationUserCase
 import com.qpeterp.clip.domain.usecase.organization.GetOrganizationListUseCase
 import com.qpeterp.clip.domain.usecase.organization.GetOrganizationUseCase
 import com.qpeterp.clip.domain.usecase.organization.JoinOrganizationUserCase
+import com.qpeterp.clip.presentation.common.Common
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -95,6 +96,7 @@ class ManageTeamViewModel @Inject constructor(
 
     fun getOrganization(organizationId: Int, onSuccess: (Int) -> Unit, onFailed: () -> Unit) {
         Log.d(Constant.TAG, "조직 조회 organizationId: $organizationId")
+        Common.organizationId = organizationId
         viewModelScope.launch {
             getOrganizationUseCase(
                 param = GetOrganizationUseCase.Param(organizationId = organizationId)

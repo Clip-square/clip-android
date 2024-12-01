@@ -1,5 +1,6 @@
 package com.qpeterp.clip.data.repository
 
+import com.qpeterp.clip.data.data.organization.Members
 import com.qpeterp.clip.data.data.organization.Organization
 import com.qpeterp.clip.data.data.organization.OrganizationCode
 import com.qpeterp.clip.data.data.organization.OrganizationName
@@ -30,5 +31,9 @@ class OrganizationRepositoryImpl @Inject constructor(
 
     override suspend fun getOrganization(organizationId: Int): Response<Organization> {
         return organizationService.getOrganization(organizationId.toString())
+    }
+
+    override suspend fun getOrganizationMembers(organizationId: Int): Response<Members> {
+        return organizationService.getOrganizationMembers(organizationId.toString())
     }
 }

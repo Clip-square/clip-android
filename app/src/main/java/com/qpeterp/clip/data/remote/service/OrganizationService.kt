@@ -1,5 +1,7 @@
 package com.qpeterp.clip.data.remote.service
 
+import com.qpeterp.clip.data.data.auth.User
+import com.qpeterp.clip.data.data.organization.Members
 import com.qpeterp.clip.data.data.organization.Organization
 import com.qpeterp.clip.data.data.organization.OrganizationCode
 import com.qpeterp.clip.data.data.organization.OrganizationName
@@ -28,4 +30,9 @@ interface OrganizationService {
     suspend fun getOrganization(
         @Path("organization_id") organizationId: String
     ): Response<Organization>
+
+    @GET("organizations/members/{organization_id}/")
+    suspend fun getOrganizationMembers(
+        @Path("organization_id") organizationId: String
+    ): Response<Members>
 }
