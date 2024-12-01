@@ -27,12 +27,6 @@ import androidx.navigation.NavController
 import com.qpeterp.clip.presentation.feature.main.history.viewmodel.HistoryViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
-data class AA(
-    val date: String,
-    val topic: String,
-    val time: String,
-)
-
 @Composable
 fun HistoryScreen(
     navController: NavController,
@@ -65,9 +59,9 @@ fun HistoryScreen(
             ) {
                 items(meetingHistoryList) {
                     MeetingHistoryCard(
-                        date = it.createdAt,
+                        date = it.startTime ?: "시작 전",
                         topic = it.title,
-                        time = it.totalDuration.toString()
+                        time = it.totalDuration
                     ) {
 
                     }
