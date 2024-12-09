@@ -59,9 +59,9 @@ fun HistoryScreen(
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 24.dp)
             ) {
-                items(meetingHistoryList.reversed()) { meeting ->
+                items(meetingHistoryList.sortedByDescending { it.id }) { meeting ->
                     MeetingHistoryCard(
-                        date = meeting.startTime ?: "시작 전",
+                        date = formatDate(meeting.startTime ?: "시작 전"),
                         topic = meeting.title,
                         time = meeting.totalDuration
                     ) {
@@ -119,4 +119,9 @@ private fun MeetingHistoryCard(
             )
         }
     }
+}
+
+fun formatDate(dateTimeString: String): String {
+    // 'T' 문자를 기준으로 앞부분(날짜)만 가져옴
+    return dateTimeString.substringBefore("T")
 }
