@@ -20,5 +20,6 @@ sealed class NavGroup {
         const val MANAGE_TEAM = "manageTeam"
         const val MEETING = "meeting"
         const val END = "end"
+        const val HISTORY_MEETING = "historyMeeting"
     }
 }

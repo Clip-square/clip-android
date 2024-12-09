@@ -27,10 +27,12 @@ data class MeetingData(
     val sections: List<Section>,
     val participants: List<MeetingUser>,
     @SerialName("is_active")
-    val isActive: ActiveType,
+    val isActive: String,
     val creator: Int,
     @SerialName("start_time")
     val startTime: String?,
+    @SerialName("meeting_minutes")
+    val meetingMinutes: String?,
 )
 
 @Serializable

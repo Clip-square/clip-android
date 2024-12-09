@@ -28,6 +28,7 @@ class LoginViewModel @Inject constructor(
         result.onSuccess { response ->
             if (response.isSuccessful) {
                 Log.d(Constant.TAG, "로그인 성공")
+                Log.d(Constant.TAG, "Token : ${response.body()!!.token.access}")
                 ClipApplication.prefs.token = response.body()!!.token.access
                 ClipApplication.prefs.userId = response.body()!!.user.id
                 onLoginSuccess()

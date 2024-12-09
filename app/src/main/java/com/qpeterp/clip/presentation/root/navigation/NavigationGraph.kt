@@ -15,6 +15,7 @@ import com.qpeterp.clip.presentation.feature.meeting.screen.MeetingScreen
 import com.qpeterp.clip.presentation.feature.main.setup.screen.SetupScreen
 import com.qpeterp.clip.presentation.feature.auth.login.screen.LoginScreen
 import com.qpeterp.clip.presentation.feature.auth.register.viewmodel.RegisterViewModel
+import com.qpeterp.clip.presentation.feature.main.history.screen.HistoryMeetingScreen
 import com.qpeterp.clip.presentation.feature.main.history.screen.HistoryScreen
 import com.qpeterp.clip.presentation.feature.main.screen.MainScreen
 import com.qpeterp.clip.presentation.feature.main.setting.screen.SettingScreen
@@ -80,6 +81,11 @@ fun NavigationGraph(
 
         composable(NavGroup.Features.END) {
             EndScreen(navController)
+        }
+        composable("historyMeeting/{id}") { backStackEntry ->
+            // backStackEntry.arguments["id"]로 id값을 받을 수 있습니다.
+            val id = backStackEntry.arguments?.getString("id")
+            HistoryMeetingScreen(navController, id)
         }
     }
 }

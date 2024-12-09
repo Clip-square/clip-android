@@ -6,6 +6,7 @@ import com.qpeterp.clip.data.remote.service.AuthService
 import com.qpeterp.clip.data.remote.service.MeetingService
 import com.qpeterp.clip.data.remote.service.OrganizationService
 import com.qpeterp.clip.domain.usecase.meeting.CreateMeetingUseCase
+import com.qpeterp.clip.domain.usecase.meeting.EndMeetingUseCase
 import com.qpeterp.clip.domain.usecase.meeting.StartMeetingUseCase
 import com.qpeterp.clip.domain.usecase.organization.GetOrganizationMembersUseCase
 import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
@@ -20,6 +21,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.net.CookieManager
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -44,6 +46,9 @@ class NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)  // 연결 타임아웃
+            .readTimeout(60, TimeUnit.SECONDS)     // 읽기 타임아웃
+            .writeTimeout(60, TimeUnit.SECONDS)
             .cookieJar(JavaNetCookieJar(CookieManager()))
             .build()
     }
@@ -68,12 +73,14 @@ class NetworkModule {
     fun provideMeetingViewModel(
         organizationMembersUseCase: GetOrganizationMembersUseCase,
         createMeetingUseCase: CreateMeetingUseCase,
-        startMeetingUseCase: StartMeetingUseCase
+        startMeetingUseCase: StartMeetingUseCase,
+        endMeetingUseCase: EndMeetingUseCase
     ): MeetingViewModel {
         return MeetingViewModel(
             organizationMembersUseCase,
             createMeetingUseCase,
-            startMeetingUseCase
+            startMeetingUseCase,
+            endMeetingUseCase
         )
     }
 }

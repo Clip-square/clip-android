@@ -62,12 +62,16 @@ android {
 }
 
 dependencies {
+    // Markdown
+    implementation("com.github.jeziellago:compose-markdown:0.5.4")
+
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0") // OkHttp 핵심 라이브러리
     implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     // Retrofit 라이브러리
     implementation("com.squareup.retrofit2:retrofit:2.11.0")

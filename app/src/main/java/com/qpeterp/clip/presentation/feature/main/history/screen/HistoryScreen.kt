@@ -1,5 +1,6 @@
 package com.qpeterp.clip.presentation.feature.main.history.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.presentation.feature.main.history.viewmodel.HistoryViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 
@@ -37,14 +39,14 @@ fun HistoryScreen(
     if (uiState.isLoading) {
         CircularProgressIndicator()
     } else {
-        val meetingHistoryList = viewModel.uiState.value.history!!
-        if (meetingHistoryList.isEmpty()) {
+        val meetingHistoryList = uiState.history
+        if (meetingHistoryList.isNullOrEmpty()) {
             Text(
                 text = "회의 기록이 없습니다.",
                 fontWeight = FontWeight.Medium,
                 fontSize = 20.sp,
                 color = Colors.DarkGray,
-                textAlign = TextAlign.Center, // 중앙 정렬 추가 (세로엔 영향 없음)
+                textAlign = TextAlign.Center, // 중앙 정렬 추가
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center) // 텍스트를 중앙에 배치
@@ -57,13 +59,17 @@ fun HistoryScreen(
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 24.dp)
             ) {
-                items(meetingHistoryList) {
+                items(meetingHistoryList.reversed()) { meeting ->
                     MeetingHistoryCard(
-                        date = it.startTime ?: "시작 전",
-                        topic = it.title,
-                        time = it.totalDuration
+                        date = meeting.startTime ?: "시작 전",
+                        topic = meeting.title,
+                        time = meeting.totalDuration
                     ) {
-
+                        // 중복 네비게이션 방지
+                        if (!uiState.isLoading) {
+                            Log.d(Constant.TAG, "HistoryMeetingScreen id : ${meeting.id}")
+                            navController.navigate("historyMeeting/${meeting.id}")
+                        }
                     }
                 }
             }

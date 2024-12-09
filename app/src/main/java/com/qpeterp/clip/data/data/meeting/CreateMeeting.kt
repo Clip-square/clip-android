@@ -18,12 +18,3 @@ data class CreateMeeting(
     @SerialName("start_time")
     val startTime: String
 )
-
-enum class ActiveType {
-    @SerialName("true")
-    TRUE,
-    @SerialName("ongoing")
-    ONGOING,
-    @SerialName("false")
-    FALSE,
-}

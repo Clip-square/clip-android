@@ -1,5 +1,6 @@
 package com.qpeterp.clip.presentation.feature.meeting.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -42,12 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.qpeterp.clip.common.Constant
 import com.qpeterp.clip.data.data.meeting.Section
 import com.qpeterp.clip.presentation.core.ClipButton
 import com.qpeterp.clip.presentation.feature.meeting.viewmodel.MeetingViewModel
 import com.qpeterp.clip.presentation.theme.Colors
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -55,13 +59,28 @@ fun MeetingScreen(
     navController: NavController,
     viewModel: MeetingViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    // startRecode 호출을 LaunchedEffect로 실행
+    LaunchedEffect(Unit) {
+        viewModel.startRecode(
+            context,
+            onSuccess = {
+                navController.navigate("end") {
+                    popUpTo(0)
+                }
+            },
+            onFailed = {
+                Log.d(Constant.TAG, "음성 박음박음박음")
+            }
+        )
+    }
     val meetingState = viewModel.meetingState.collectAsState().value
 
     val black = if (meetingState) Colors.Black else Colors.White
     val white = if (meetingState) Colors.White else Colors.Black
 
     val meetingData = viewModel.meetingData.collectAsState().value
-    val sections = meetingData?.sections ?: listOf(Section("tldkjskls", ""))
+    val sections = meetingData?.sections ?: listOf(Section("ㅁㄴㅇㄹㅁㄴㅇㄹ", ""))
     val currentSubTopicIndex = viewModel.subTopicIndex.collectAsState().value
 
     Box(
@@ -92,7 +111,8 @@ fun MeetingScreen(
                     TimerScreen(
                         initialTime = meetingData.totalDuration,
                         initialTextColor = white,
-                        isPaused = !meetingState
+                        isPaused = !meetingState,
+                        viewModel = viewModel
                     )
                 }
 
@@ -128,16 +148,18 @@ fun MeetingScreen(
                             subTopicIndex = index,
                             black = black,
                             white = white,
-                            isLastIndex = if (index == sections.size - 1) true else false,
+                            isLastIndex = (index == sections.size - 1),
                             isCurrentIndex = currentSubTopicIndex == index
                         ) {
+                            val endTime =
+                                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+                                    Date()
+                                )
+                            viewModel.addSectionsEndTime(endTime)
                             if (index == sections.size - 1) {
-                                navController.navigate("end") {
-                                    popUpTo(0)
-                                }
+                                viewModel.stopRecode()
                                 return@MeetingSubTopicCard
                             }
-                            // TODO: endTime 저장하기
                             viewModel.updateSubTopicIndex(index + 1)
                         }
                     }
@@ -153,6 +175,11 @@ fun MeetingScreen(
             backgroundColor = white,
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
+            if (meetingState) {
+                viewModel.pauseRecode()
+            } else {
+                viewModel.resumeRecode()
+            }
             viewModel.changeMeetingState()
         }
     }
@@ -277,11 +304,15 @@ fun TimerScreen(
     initialTime: String,
     initialTextColor: Color = Color.Black,
     expiredTextColor: Color = Color.Red,
-    isPaused: Boolean
+    isPaused: Boolean,
+    viewModel: MeetingViewModel,
 ) {
+    // initialTime을 초 단위로 파싱
     var remainingTime by remember { mutableIntStateOf(parseTimeToSeconds(initialTime)) }
     var isExpired by remember { mutableStateOf(false) }
+    val startTimeInMillis = remember { System.currentTimeMillis() }  // 타이머 시작 시간 (밀리초 단위)
 
+    // 타이머가 진행되는 동안 1초마다 업데이트
     LaunchedEffect(remainingTime, isPaused) {
         if (!isPaused) { // 일시정지 상태가 아닐 때만 실행
             if (remainingTime > 0) {
@@ -289,13 +320,17 @@ fun TimerScreen(
                 remainingTime -= 1
             } else {
                 isExpired = true
-                remainingTime -= 1 // 음수로 증가
+                remainingTime -= 1 // 음수로 증가 (시간이 0 이하로 떨어지면 음수로 유지)
             }
         }
     }
 
+    // 남은 시간 포맷
     val formattedTime = formatSecondsToTime(remainingTime)
+    // 경과된 시간 계산 (초 단위)
+    viewModel.setTotalDuration(getElapsedTime(startTimeInMillis))
 
+    // 타이머 UI
     Text(
         text = formattedTime,
         fontSize = 24.sp,
@@ -304,15 +339,30 @@ fun TimerScreen(
     )
 }
 
+// 초를 시:분:초 형식으로 변환
 fun formatSecondsToTime(seconds: Int): String {
-    val absSeconds = kotlin.math.abs(seconds)
-    val sign = if (seconds < 0) "-" else ""
-    val hours = absSeconds / 3600
-    val minutes = (absSeconds % 3600) / 60
-    val secs = absSeconds % 60
-    return String.format("%s%02d:%02d:%02d", sign, hours, minutes, secs)
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d:%02d", hours, minutes, secs)
 }
 
+// 시작 시간부터 경과된 시간을 계산
+fun getElapsedTime(startTimeInMillis: Long): String {
+    val currentTimeInMillis = System.currentTimeMillis()
+    val elapsedTimeInMillis = currentTimeInMillis - startTimeInMillis
+    return formatMillisToTime(elapsedTimeInMillis)
+}
+
+// 밀리초를 시:분:초 형식으로 변환
+fun formatMillisToTime(millis: Long): String {
+    val hours = (millis / 3600000) % 24
+    val minutes = (millis / 60000) % 60
+    val seconds = (millis / 1000) % 60
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+// "HH:mm:ss" 형식의 시간 문자열을 초로 변환
 fun parseTimeToSeconds(timeString: String): Int {
     val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     val date = format.parse(timeString) ?: return 0
